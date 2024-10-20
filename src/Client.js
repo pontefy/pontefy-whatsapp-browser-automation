@@ -262,18 +262,8 @@ class Client extends EventEmitter {
      */
     async initialize() {
 
-        let 
-            /**
-             * @type {puppeteer.Browser}
-             */
-            browser, 
-            /**
-             * @type {puppeteer.Page}
-             */
-            page;
-
-        browser = null;
-        page = null;
+        let browser = this.pupBrowser;
+        let page = this.pupPage;
 
         await this.authStrategy.beforeBrowserInitialized();
 
@@ -289,8 +279,8 @@ class Client extends EventEmitter {
             // navigator.webdriver fix
             browserArgs.push('--disable-blink-features=AutomationControlled');
 
-            browser = await puppeteer.launch({...puppeteerOpts, args: browserArgs});
-            page = (await browser.pages())[0];
+            // browser = await puppeteer.launch({...puppeteerOpts, args: browserArgs});
+            // page = (await browser.pages())[0];
         }
 
         if (this.options.proxyAuthentication !== undefined) {
@@ -299,9 +289,6 @@ class Client extends EventEmitter {
       
         await page.setUserAgent(this.options.userAgent);
         if (this.options.bypassCSP) await page.setBypassCSP(true);
-
-        this.pupBrowser = browser;
-        this.pupPage = page;
 
         await this.authStrategy.afterBrowserInitialized();
         await this.initWebVersionCache();
